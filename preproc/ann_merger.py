@@ -1,5 +1,5 @@
 import json
-import os
+import os.path as osp
 
 from .data import *
 from .utils import *
@@ -13,7 +13,7 @@ class AnnMerger:
         self.anns = self._merge()
 
     def dump(self):
-        with open(os.path.join(self.dir_moma, "anns/anns.json"), "w") as f:
+        with open(osp.join(self.dir_moma, "anns/anns.json"), "w") as f:
             json.dump(self.anns, f, ensure_ascii=False, indent=2, sort_keys=False)
 
     def _get_anns(self):

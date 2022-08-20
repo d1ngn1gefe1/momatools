@@ -2,6 +2,7 @@ from collections import defaultdict
 import itertools
 import json
 import os
+import os.path as osp
 import random
 
 
@@ -9,7 +10,7 @@ class SplitGenerator:
     def __init__(self, dir_moma):
         self.dir_moma = dir_moma
 
-        with open(os.path.join(self.dir_moma, "anns/anns.json"), "r") as f:
+        with open(osp.join(self.dir_moma, "anns/anns.json"), "r") as f:
             anns = json.load(f)
 
         self.ids_act = [ann["activity"]["id"] for ann in anns]
@@ -59,7 +60,8 @@ class SplitGenerator:
         ids_act_train = [self.ids_act[j] for j in indices_train]
         ids_act_val = [self.ids_act[j] for j in indices_val]
         ids_act_test = [self.ids_act[j] for j in indices_test]
-        path_split = os.path.join(self.dir_moma, "anns/split_std.json")
+        path_split = osp.join(self.dir_moma, "anns/splits/standard.json")
+        os.makedirs(osp.join(self.dir_moma, "anns/splits/"), exist_ok=True)
         with open(path_split, "w") as f:
             json.dump(
                 {"train": ids_act_train, "val": ids_act_val, "test": ids_act_test},
@@ -69,15 +71,18 @@ class SplitGenerator:
             )
 
     def generate_few_shot_splits(self):
-        with open(os.path.join(self.dir_moma, "anns/taxonomy/few_shot.json"), "r") as f:
+        with open(osp.join(self.dir_moma, "anns_raw/splits/few_shot.json"), "r") as f:
             split_to_cnames = json.load(f)
 
         # need ids_act given cnames
-        path_split = os.path.join(self.dir_moma, "anns/split_fs.json")
         output = {}
         for split, cnames in split_to_cnames.items():
-            output[split] = itertools.chain.from_iterable(
-                [self.cname_to_ids[cname] for cname in split_to_cnames[split]]
+            output[split] = sorted(
+                itertools.chain.from_iterable(
+                    [self.cname_to_ids[cname] for cname in split_to_cnames[split]]
+                )
             )
+        path_split = osp.join(self.dir_moma, "anns/splits/few_shot.json")
+        os.makedirs(osp.join(self.dir_moma, "anns/splits/"), exist_ok=True)
         with open(path_split, "w") as f:
             json.dump(output, f, indent=2, sort_keys=False)

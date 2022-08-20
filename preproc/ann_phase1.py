@@ -4,6 +4,7 @@ from fractions import Fraction
 import json
 import math
 import os
+import os.path as osp
 
 from .data import *
 from .utils import *
@@ -11,12 +12,12 @@ from .utils import *
 
 class AnnPhase1:
     def __init__(self, dir_moma, fname_ann):
-        with open(os.path.join(dir_moma, "anns", fname_ann), "r") as f:
+        with open(osp.join(dir_moma, "anns_raw", fname_ann), "r") as f:
             anns_act = json.load(f)
 
-        with open(os.path.join(dir_moma, "anns/taxonomy/act_sact.json"), "r") as f:
+        with open(osp.join(dir_moma, "anns/taxonomy/act_sact.json"), "r") as f:
             taxonomy = json.load(f)
-        with open(os.path.join(dir_moma, "anns/taxonomy/cn2en.json"), "r") as f:
+        with open(osp.join(dir_moma, "anns/taxonomy/cn2en.json"), "r") as f:
             cn2en = json.load(f)
 
         self.anns_act = anns_act  # dict
@@ -165,7 +166,7 @@ class AnnPhase1:
 
     def _inspect_anns_act(self):
         # check video files
-        fnames_video_all = os.listdir(os.path.join(self.dir_moma, "videos/raw"))
+        fnames_video_all = os.listdir(osp.join(self.dir_moma, "videos/raw"))
         assert all([fname_video.endswith(".mp4") for fname_video in fnames_video_all])
 
         # make sure ids_sact are unique integers across different activities
@@ -203,11 +204,11 @@ class AnnPhase1:
 
         # make sure the corresponding video exist
         fname_video = anns_sact[0]["orig_vid"]
-        # path_video = os.path.join(self.dir_moma, f'videos/all/{fname_video}')
-        path_video = os.path.join(
+        # path_video = osp.join(self.dir_moma, f'videos/all/{fname_video}')
+        path_video = osp.join(
             self.dir_moma, f"videos/raw/{fname_video.split('_', 1)[1]}"
         )
-        assert os.path.isfile(path_video), f"video file does not exit: {path_video}"
+        assert osp.isfile(path_video), f"video file does not exit: {path_video}"
 
         # make sure fps is consistent
         probe = ffmpeg.probe(path_video)

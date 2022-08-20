@@ -2,7 +2,7 @@ import collections
 import itertools
 import json
 import math
-import os
+import os.path as osp
 
 from .data import *
 from .utils import *
@@ -11,7 +11,7 @@ from .utils import *
 class AnnPhase2:
     def __init__(self, dir_moma, fname_ann):
         anns_raw = []
-        with open(os.path.join(dir_moma, "anns", fname_ann), "r") as fs:
+        with open(osp.join(dir_moma, "anns_raw", fname_ann), "r") as fs:
             for f in fs:
                 anns_raw.append(json.loads(f))
         anns_sact_raw = [
@@ -22,45 +22,43 @@ class AnnPhase2:
             for ann_sact_raw in anns_sact_raw
         }
 
-        with open(os.path.join(dir_moma, "anns/taxonomy/actor.json"), "r") as f:
+        with open(osp.join(dir_moma, "anns/taxonomy/actor.json"), "r") as f:
             taxonomy_actor = json.load(f)
             taxonomy_actor = sorted(
                 itertools.chain(*[taxonomy_actor[key] for key in taxonomy_actor])
             )
-        with open(os.path.join(dir_moma, "anns/taxonomy/object.json"), "r") as f:
+        with open(osp.join(dir_moma, "anns/taxonomy/object.json"), "r") as f:
             taxonomy_object = json.load(f)
             taxonomy_object = sorted(
                 itertools.chain(*[taxonomy_object[key] for key in taxonomy_object])
             )
         with open(
-            os.path.join(dir_moma, "anns/taxonomy/intransitive_action.json"), "r"
+            osp.join(dir_moma, "anns/taxonomy/intransitive_action.json"), "r"
         ) as f:
             taxonomy_ia = json.load(f)
             taxonomy_ia = sorted(
                 itertools.chain(*[taxonomy_ia[key] for key in taxonomy_ia])
             )
             taxonomy_ia = [tuple(x) for x in taxonomy_ia]
-        with open(
-            os.path.join(dir_moma, "anns/taxonomy/transitive_action.json"), "r"
-        ) as f:
+        with open(osp.join(dir_moma, "anns/taxonomy/transitive_action.json"), "r") as f:
             taxonomy_ta = json.load(f)
             taxonomy_ta = sorted(
                 itertools.chain(*[taxonomy_ta[key] for key in taxonomy_ta])
             )
             taxonomy_ta = [tuple(x) for x in taxonomy_ta]
-        with open(os.path.join(dir_moma, "anns/taxonomy/attribute.json"), "r") as f:
+        with open(osp.join(dir_moma, "anns/taxonomy/attribute.json"), "r") as f:
             taxonomy_att = json.load(f)
             taxonomy_att = sorted(
                 itertools.chain(*[taxonomy_att[key] for key in taxonomy_att])
             )
             taxonomy_att = [tuple(x) for x in taxonomy_att]
-        with open(os.path.join(dir_moma, "anns/taxonomy/relationship.json"), "r") as f:
+        with open(osp.join(dir_moma, "anns/taxonomy/relationship.json"), "r") as f:
             taxonomy_rel = json.load(f)
             taxonomy_rel = sorted(
                 itertools.chain(*[taxonomy_rel[key] for key in taxonomy_rel])
             )
             taxonomy_rel = [tuple(x) for x in taxonomy_rel]
-        with open(os.path.join(dir_moma, "anns/taxonomy/cn2en.json"), "r") as f:
+        with open(osp.join(dir_moma, "anns/taxonomy/cn2en.json"), "r") as f:
             cn2en = json.load(f)
             en2cn = {value: key for key, value in cn2en.items()}
 
