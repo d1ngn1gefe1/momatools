@@ -230,14 +230,23 @@ class VideoProcessor:
         os.makedirs(dir_hoi_frames, exist_ok=True)
         assert num_frames % 2 == 1  # odd number
 
-        if os.path.exists(os.path.join(self.dir_moma, "anns/clips.json")):
-            with open(os.path.join(self.dir_moma, "anns/clips.json"), "r") as f:
+        if os.path.exists(
+            os.path.join(self.dir_moma, "videos/interaction_frames/timestamps.json")
+        ):
+            with open(
+                os.path.join(
+                    self.dir_moma, "videos/interaction_frames/timestamps.json"
+                ),
+                "r",
+            ) as f:
                 info_clips = json.load(f)
         else:
             info_clips = defaultdict(list)
 
         if split is not None:
-            with open(os.path.join(self.dir_moma, "anns/split_std.json"), "r") as f:
+            with open(
+                os.path.join(self.dir_moma, "anns/splits/standard.json"), "r"
+            ) as f:
                 ids_act = json.load(f)[split]
             anns = [ann for ann in self.anns if ann["activity"]["id"] in ids_act]
         else:
@@ -297,5 +306,8 @@ class VideoProcessor:
             if path_exist not in paths_trg:
                 os.remove(path_exist)
 
-        with open(os.path.join(self.dir_moma, "anns/clips.json"), "w") as f:
+        with open(
+            os.path.join(self.dir_moma, "videos/interaction_frames/timestamps.json"),
+            "w",
+        ) as f:
             json.dump(info_clips, f, indent=2, sort_keys=True)
