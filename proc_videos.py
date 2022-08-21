@@ -18,7 +18,9 @@ def proc_videos(args):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-d", "--dir-moma", type=str, default="/media/hdd/moma-lrg")
+    parser.add_argument(
+        "-d", "--dir-moma", type=str, default="/home/alan/data/moma-lrg"
+    )
     args = parser.parse_args()
 
     proc_videos(args)

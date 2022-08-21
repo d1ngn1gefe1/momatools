@@ -29,7 +29,9 @@ def proc_anns(args):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-d", "--dir-moma", type=str, default="/media/hdd/moma-lrg")
+    parser.add_argument(
+        "-d", "--dir-moma", type=str, default="/home/alan/data/moma-lrg"
+    )
     parser.add_argument(
         "-f1", "--fname_ann1", type=str, default="video_anns_phase1_processed.json",
     )
