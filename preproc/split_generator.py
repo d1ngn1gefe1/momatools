@@ -4,6 +4,7 @@ import json
 import os
 import os.path as osp
 import random
+import shutil
 
 
 class SplitGenerator:
@@ -71,8 +72,14 @@ class SplitGenerator:
             )
 
     def generate_few_shot_splits(self):
-        with open(osp.join(self.dir_moma, "anns_raw/splits/few_shot.json"), "r") as f:
+        with open(osp.join(self.dir_moma, "anns_raw/taxonomy/few_shot.json"), "r") as f:
             split_to_cnames = json.load(f)
+
+        os.makedirs(osp.join(self.dir_moma, "anns/taxonomy/"), exist_ok=True)
+        shutil.copyfile(
+            osp.join(self.dir_moma, "anns_raw/taxonomy/few_shot.json"),
+            osp.join(self.dir_moma, "anns/taxonomy/few_shot.json"),
+        )
 
         # need ids_act given cnames
         output = {}
